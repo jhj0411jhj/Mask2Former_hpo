@@ -32,6 +32,7 @@ MODEL_MAPPING = {
     'base': 'model_final_83d103.pkl',
     'large': 'model_final_e5f453.pkl',
 }
+assert set(CONFIG_MAPPING.keys()) == set(MODEL_MAPPING.keys())
 
 # CONFIG_FILE = "/root/jhj/cv/Mask2Former/configs/youtubevis_2019/swin/video_maskformer2_swin_tiny_bs16_8ep.yaml"
 # MODEL_WEIGHTS = "/root/jhj/cv/models/model_final_86143f.pkl"
@@ -286,7 +287,7 @@ if __name__ == "__main__":
     parser.add_argument('--master', type=str, default='127.0.0.1', help='master ip')
     parser.add_argument('--workers', type=str, default='', help='user@host:port,user@host:port,...')
 
-    parser.add_argument('--scale', type=str, choices=['tiny', 'small', 'base', 'large'], default='tiny')
+    parser.add_argument('--scale', type=str, choices=list(CONFIG_MAPPING.keys()), default='tiny')
     parser.add_argument('--space', type=str, default='full')
     parser.add_argument('--resume_task', type=str, default=None, help='resume an HPO task')
     parser.add_argument('--surrogate_type', type=str, default='gp')
