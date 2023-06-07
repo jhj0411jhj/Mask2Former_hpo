@@ -94,6 +94,10 @@ def get_configspace(space_type='full'):
     lr_scheduler_steps = sp.Categorical("lr_scheduler_steps", choices=['2/3', '1/2', '1/2+3/4'], default_value='2/3')
     lr_scheduler_gamma = sp.Real("lr_scheduler_gamma", 0.01, 1.0, default_value=0.1, log=True)
 
+    # model_num_object_queries = sp.Int("model_num_object_queries", 100, 900, default_value=200, q=100)
+    model_num_object_queries = sp.Ordinal(
+        "model_num_object_queries", sequence=[100, 200, 300, 600, 900], default_value=200)
+
     cond_optimizer = sp.EqualsCondition(sgd_momentum, optimizer, "SGD")
 
     space = sp.Space()
@@ -110,6 +114,11 @@ def get_configspace(space_type='full'):
             lr_scheduler_steps, lr_scheduler_gamma,
         ])
         space.add_conditions([cond_optimizer])
+
+    elif space_type == 'mid_v2':
+        space.add_variables([base_lr, weight_decay, optimizer, sgd_momentum, model_num_object_queries])
+        space.add_conditions([cond_optimizer])
+
     else:
         raise NotImplementedError(f'Unknown space_type: {space_type}')
 
@@ -129,6 +138,7 @@ HP_NAME_TO_YAML_KEY = {
     'clip_gradients_clip_value': 'SOLVER.CLIP_GRADIENTS.CLIP_VALUE',
     'lr_scheduler_steps': 'SOLVER.STEPS',
     'lr_scheduler_gamma': 'SOLVER.GAMMA',
+    'model_num_object_queries': 'MODEL.MASK_FORMER.NUM_OBJECT_QUERIES',
 }
 
 
